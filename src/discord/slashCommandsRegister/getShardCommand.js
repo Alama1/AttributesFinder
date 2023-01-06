@@ -11,6 +11,7 @@ class getShardCommand {
         .addStringOption(option =>
             option.setName('query')
                 .setDescription('Phrase to search for')
+                .setRequired(true)
                 .setAutocomplete(true))
 
 

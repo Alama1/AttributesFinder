@@ -1,6 +1,6 @@
 const {EmbedBuilder, ActionRowBuilder, ButtonBuilder} = require('discord.js')
 
-class createButtonCommand {
+class getShardCommand {
 
     constructor(discord) {
         this.discord = discord
@@ -86,4 +86,4 @@ class createButtonCommand {
 }
 
 
-module.exports = createButtonCommand
+module.exports = getShardCommand
