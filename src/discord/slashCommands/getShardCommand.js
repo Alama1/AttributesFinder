@@ -9,7 +9,7 @@ class createButtonCommand {
 
     async onCommand(interaction) {
         const shardName = interaction.options._hoistedOptions[0].value
-        const shards = this.discord.attributeAuctions[shardName].sort((a, b) => a.starting_bid - b.starting_bid)
+        const shards = this.discord.attributeShardsAuctions[shardName].sort((a, b) => a.starting_bid - b.starting_bid)
         let replyEmbed = new EmbedBuilder()
             .setTitle(shardName)
             .setAuthor({ name: `Attribute shard ${0}/${shards.length}`, iconURL: 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/ac/Prismarine_Shard_JE2_BE2.png/revision/latest?cb=20190430045708'})

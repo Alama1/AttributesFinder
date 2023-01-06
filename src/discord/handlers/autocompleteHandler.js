@@ -6,7 +6,7 @@ class AutocompleteHandler {
 
     async onInteraction(interaction) {
         const typed = interaction.options._hoistedOptions[0].value
-        const shards = Object.keys(this.discord.attributeAuctions)
+        const shards = Object.keys(this.discord.attributeShardsAuctions)
         const focusedValue = interaction.options.getFocused();
         const choices = shards.filter(shard => shard.startsWith(typed)).slice(0, 10)
         const filtered = choices.filter(choice => choice.startsWith(focusedValue));

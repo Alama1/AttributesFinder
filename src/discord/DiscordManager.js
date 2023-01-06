@@ -10,7 +10,8 @@ class DiscordManager {
         this.app = app
         this.stateHandler = new StateHandler(this)
         this.auctionhandler = new AuctionHandler(this)
-        this.attributeAuctions = {}
+        this.attributeShardsAuctions = {}
+        this.attributeArmorAuctions = {}
     }
 
     connect() {
