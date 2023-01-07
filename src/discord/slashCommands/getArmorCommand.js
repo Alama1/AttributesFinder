@@ -18,25 +18,17 @@ class getArmorCommand {
         let armorWithShards = this.discord.attributeArmorAuctions[armorName].filter(function (piece) {
             //two shards request
             if (shard2 !== 'any') {
-                console.log(piece.item_stats)
                 if (!piece.item_stats.hasOwnProperty(shard1) || !piece.item_stats.hasOwnProperty(shard2)) return false
                 //two shards with specific levels
-                console.log(shard1level)
-                console.log(shard2level)
                 if (shard1level !== 'any' && shard2level !== 'any') {
-                    console.log('Two shards with two levels')
                     return piece.item_stats[shard1] === +shard1level && piece.item_stats[shard2] === +shard2level
                 }
                 //only first shard with specific level
                 if (shard1level !== 'any') {
-                    console.log('Only first has level')
-                    console.log(piece.item_stats[shard1])
-                    console.log(piece.item_stats[shard1] === +shard1level)
                     return piece.item_stats[shard1] === +shard1level
                 }
                 //only second shard with specific level
                 if (shard2level !== 'any') {
-                    console.log('Only second has level')
                     return piece.item_stats.hasOwnProperty(shard1) && piece.item_stats[shard2] === +shard2level
                 }
                 return piece.item_stats.hasOwnProperty(shard1) && piece.item_stats.hasOwnProperty(shard2)
