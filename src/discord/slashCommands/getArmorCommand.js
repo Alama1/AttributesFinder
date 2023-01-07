@@ -1,10 +1,12 @@
-const {EmbedBuilder, ActionRowBuilder, ButtonBuilder} = require('discord.js')
+const {EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js')
 
 class getArmorCommand {
 
     constructor(discord) {
         this.discord = discord
         this.name = 'getarmor'
+        this.pages = {}
+
     }
 
     async onCommand(interaction) {
@@ -13,7 +15,7 @@ class getArmorCommand {
         const shard1level = interaction.options._hoistedOptions[2].value
         const shard2 = interaction.options._hoistedOptions[3].value
         const shard2level = interaction.options._hoistedOptions[4].value
-        let armorWithOneShard = this.discord.attributeArmorAuctions[armorName].filter(function (piece) {
+        let armorWithShards = this.discord.attributeArmorAuctions[armorName].filter(function (piece) {
             //two shards request
             if (shard2 !== 'any') {
                 console.log(piece.item_stats)
@@ -46,7 +48,7 @@ class getArmorCommand {
             return piece.item_stats.hasOwnProperty(shard1)
         })
 
-        if (armorWithOneShard.length === 0) {
+        if (armorWithShards.length === 0) {
             let notFoundEmbed = new EmbedBuilder()
                 .setTitle('Armor not found')
                 .setAuthor({ name: armorName, iconURL: 'https://i.imgflip.com/4/65939r.jpg'})
@@ -55,76 +57,75 @@ class getArmorCommand {
             return
         }
 
-        armorWithOneShard = armorWithOneShard.sort((a, b) => a.starting_bid - b.starting_bid)
+        armorWithShards = armorWithShards.sort((a, b) => a.starting_bid - b.starting_bid)
 
-        let replyEmbed = new EmbedBuilder()
-            .setTitle(armorName)
-            .setAuthor({ name: `Attribute shard ${1}/${armorWithOneShard.length}`, iconURL: 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/4/44/InvSprite.png/revision/latest?cb=20221123185755&format=original&format=original'})
-        replyEmbed
-            .setDescription(`Armor/equipment found!\n${Object.entries(armorWithOneShard[0].item_stats).join('\n')}`)
+        let embeds = []
 
-        const nextItemButton = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('nextitemarmor')
-                    .setLabel('Next')
-                    .setStyle('Primary'),
-            )
+        armorWithShards.forEach((armor, index) => {
+            let armorEmbed = new EmbedBuilder()
+                .setTitle(armorName)
+                .setAuthor({ name: `Equipment ${index + 1}/${armorWithShards.length}`, iconURL: 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/4/44/InvSprite.png/revision/latest?cb=20221123185755&format=original&format=original'})
+                .setDescription(`Armor/equipment found!\n${Object.entries(armor.item_stats).join('\n')}`)
+                .addFields([{name: `Price: ${armor.starting_bid}`, value: `/viewauction ${armor.uuid} \nBIN: ${armor.bin}`}])
 
-        const prevItemButton = new ActionRowBuilder()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId('previtemarmor')
-                    .setLabel('Previous')
-                    .setStyle('Primary'),
-            )
-
-        const clickFilter = (btnInt) => {
-            return interaction.user.id === btnInt.user.id
-        }
-
-        const collector = interaction.channel.createMessageComponentCollector({
-            clickFilter,
-            time: 1000 * 60
+            embeds.push(armorEmbed)
         })
 
-        let index = 0
+        const id = interaction.user.id
+        this.pages[id] = this.pages[id] || 0
+        const embed = embeds[this.pages[id]]
+        let reply
+        let collector
 
-        collector.on('collect', (clickedButton) => {
-            clickedButton.deferUpdate()
-            let replyEmbed = new EmbedBuilder()
-                .setTitle(armorWithOneShard)
-                .setAuthor({ name: `Attribute shard ${index + 1}/${armorWithOneShard.length}`, iconURL: 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/ac/Prismarine_Shard_JE2_BE2.png/revision/latest?cb=20190430045708'})
-                .setDescription('Shard found!')
-                .addFields([{name: `Price: ${armorWithOneShard[index].starting_bid}`, value: `/viewauction ${armorWithOneShard[index].uuid} \nBIN: ${armorWithOneShard[0].bin}`}])
+        const filter = (i) => i.user.id === interaction.user.id
+        const time = 1000 * 60 * 5
 
-            if (clickedButton.customId === "nextitemarmor") {
-                index++;
+        reply = await interaction.editReply({
+            embeds: [embed],
+            components: [this.getRow(id, embeds.length)]
+        })
+
+        collector = reply.createMessageComponentCollector({ filter, time })
+
+        collector.on('collect', (btnInt) => {
+            if (!btnInt) return
+            btnInt.deferUpdate()
+            if (btnInt.customId !== 'previous_embed' && btnInt.customId !== 'next_embed') return
+            if (btnInt.customId === 'previous_embed' && this.pages[id] > 0) --this.pages[id]
+            else if (btnInt.customId === 'next_embed' && this.pages[id] < embeds.length -1) ++this.pages[id]
+
+            if (reply) {
+                reply.edit({
+                    embeds: [embeds[this.pages[id]]],
+                    components: [this.getRow(id, embeds.length)]
+                })
             } else {
-                index--;
-            }
-            if (index < 0) {
-                index = shards.length - 1
-            }
-            if (index >= shards.length) {
-                index = 0
+                interaction.editReply({
+                    embeds: [embeds[this.pages[id]]],
+                    components: [this.getRow(id, embeds.length)]
+                })
             }
 
-            interaction.editReply({
-                embeds: [replyEmbed]
-            })
+
         })
+    }
 
-        collector.on('end', () => {
-            interaction.editReply({
-                components: []
-            })
-        })
-
-        replyEmbed
-            .addFields([{name: `Price: ${armorWithOneShard[0].starting_bid}`, value: `/viewauction ${armorWithOneShard[0].uuid} \nBIN: ${armorWithOneShard[0].bin}`}])
-
-        interaction.editReply({ embeds: [replyEmbed], components: [nextItemButton, prevItemButton] })
+    getRow(id, embedsLength) {
+        const row = new ActionRowBuilder()
+        row.addComponents(
+            new ButtonBuilder()
+                .setCustomId('previous_embed')
+                .setLabel('Previous')
+                .setStyle('Primary')
+                .setDisabled(this.pages[id] === 0))
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId('next_embed')
+                    .setLabel('Next')
+                    .setStyle('Primary')
+                    .setDisabled(this.pages[id] === embedsLength -1)
+            );
+        return row
     }
 
 }

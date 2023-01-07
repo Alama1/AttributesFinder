@@ -9,8 +9,8 @@ class getShardCommand {
         .setName('getshard')
         .setDescription('Get lowest prices and autions of some shard')
         .addStringOption(option =>
-            option.setName('query')
-                .setDescription('Phrase to search for')
+            option.setName('name')
+                .setDescription('Shard name to search for')
                 .setRequired(true)
                 .setAutocomplete(true))
 

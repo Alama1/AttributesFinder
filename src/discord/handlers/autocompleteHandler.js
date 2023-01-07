@@ -57,7 +57,7 @@ class AutocompleteHandler {
     shardAutofill(interaction) {
         const shards = Object.keys(this.discord.attributeShardsAuctions)
         const focusedValue = interaction.options.getFocused();
-        const choices = shards.filter(shard => shard.startsWith(focusedValue)).slice(0, 10)
+        const choices = shards.filter(shard => shard.toLowerCase().startsWith(focusedValue.toLowerCase())).slice(0, 10)
         interaction.respond(
             choices.map(choice => ({ name: choice, value: choice })),
         )
@@ -72,14 +72,14 @@ class AutocompleteHandler {
         if (optionName === 'name') {
             const shards = Object.keys(this.discord.attributeArmorAuctions)
             const focusedValue = interaction.options.getFocused();
-            const choices = shards.filter(shard => shard.startsWith(focusedValue)).slice(0, 10)
+            const choices = shards.filter(shard => shard.toLowerCase().startsWith(focusedValue.toLowerCase())).slice(0, 10)
             interaction.respond(
                 choices.map(choice => ({ name: choice, value: choice })),
             )
         }
         else if (optionName === 'shard1') {
             const focusedValue = interaction.options.getFocused();
-            const choices = this.allAttr.filter(shard => shard.startsWith(focusedValue.toLowerCase())).slice(0, 10)
+            const choices = this.allAttr.filter(shard => shard.toLowerCase().startsWith(focusedValue.toLowerCase())).slice(0, 10)
             interaction.respond(
                 choices.map(choice => ({ name: choice, value: choice })),
             )
@@ -87,7 +87,7 @@ class AutocompleteHandler {
         //shard2 bc any will be added
         else {
             const focusedValue = interaction.options.getFocused();
-            const choices = this.allAttr.filter(shard => shard.startsWith(focusedValue.toLowerCase())).slice(0, 9)
+            const choices = this.allAttr.filter(shard => shard.toLowerCase().startsWith(focusedValue.toLowerCase())).slice(0, 9)
             choices.push('any')
             interaction.respond(
                 choices.map(choice => ({ name: choice, value: choice })),
