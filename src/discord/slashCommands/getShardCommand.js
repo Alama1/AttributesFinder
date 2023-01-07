@@ -5,6 +5,7 @@ class getShardCommand {
     constructor(discord) {
         this.discord = discord
         this.name = 'getshard'
+        this.description = 'Get shard with specific attribute'
         this.pages = {}
     }
 

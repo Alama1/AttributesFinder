@@ -5,6 +5,7 @@ class getArmorCommand {
     constructor(discord) {
         this.discord = discord
         this.name = 'getarmor'
+        this.description = 'Get armor or equipment with specific attributes'
         this.pages = {}
 
     }
@@ -21,21 +22,21 @@ class getArmorCommand {
                 if (!piece.item_stats.hasOwnProperty(shard1) || !piece.item_stats.hasOwnProperty(shard2)) return false
                 //two shards with specific levels
                 if (shard1level !== 'any' && shard2level !== 'any') {
-                    return piece.item_stats[shard1] === +shard1level && piece.item_stats[shard2] === +shard2level
+                    return piece.item_stats[shard1] >= +shard1level && piece.item_stats[shard2] >= +shard2level
                 }
                 //only first shard with specific level
                 if (shard1level !== 'any') {
-                    return piece.item_stats[shard1] === +shard1level
+                    return piece.item_stats[shard1] >= +shard1level
                 }
                 //only second shard with specific level
                 if (shard2level !== 'any') {
-                    return piece.item_stats.hasOwnProperty(shard1) && piece.item_stats[shard2] === +shard2level
+                    return piece.item_stats.hasOwnProperty(shard1) && piece.item_stats[shard2] >= +shard2level
                 }
                 return piece.item_stats.hasOwnProperty(shard1) && piece.item_stats.hasOwnProperty(shard2)
             }
             //Only one shard requested
             if (shard1level !== 'any') {
-                return piece.item_stats[shard1] === +shard1level
+                return piece.item_stats[shard1] >= +shard1level
             }
             return piece.item_stats.hasOwnProperty(shard1)
         })

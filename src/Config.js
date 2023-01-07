@@ -12,7 +12,7 @@ class Configuration {
             messageMode: 'bot'
         },
         express: {
-            enabled: false,
+            enabled: true,
             port: process.env.PORT,
             authorization: "authorizationHeaderString"
         },
