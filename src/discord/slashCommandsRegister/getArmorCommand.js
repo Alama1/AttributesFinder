@@ -8,7 +8,7 @@ class getShardCommand {
     shardLevels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'any']
 
     data = new SlashCommandBuilder()
-        .setName('getarmor')
+        .setName('getequipment')
         .setDescription('Get lowest prices and autions of some armor/equipment with special attributes')
         .addStringOption(option =>
             option.setName('name')

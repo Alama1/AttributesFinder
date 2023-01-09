@@ -4,7 +4,7 @@ class getArmorCommand {
 
     constructor(discord) {
         this.discord = discord
-        this.name = 'getarmor'
+        this.name = 'getequipment'
         this.description = 'Get armor or equipment with specific attributes'
         this.pages = {}
 
