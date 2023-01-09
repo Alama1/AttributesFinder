@@ -14,13 +14,11 @@ class AuctionHandler {
         let armor = {}
         const pages = await this.getAuctionPagesCount()
         for (let i = 0; i < pages; i++) {
-            let auction = fetch(this.baseURL + `/auctions?page=${i}`)
-                .then((resp) => resp.json())
-            auctions.push(auction)
+            let auction = await fetch(this.baseURL + `/auctions?page=${i}`)
+                .then(async ( resp) => await resp.json())
+            auctions.push(auction.auctions.filter(item => this.listOfEqupment.has(item.item_name) || item.item_name === 'Attribute Shard'))
         }
-        let done = (await Promise.all(auctions)).map(auction => {
-            return auction.auctions
-        }).flat()
+        let done = (await Promise.all(auctions)).flat()
 
         const filteredArmor = done.filter(item => this.listOfEqupment.has(item.item_name))
         for (const piece of filteredArmor) {
@@ -66,6 +64,10 @@ class AuctionHandler {
             console.log(e)
         });
         return res.totalPages;
+    }
+
+    superFilter() {
+
     }
 
 }
