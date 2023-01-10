@@ -48,7 +48,7 @@ class AutocompleteHandler {
             case 'getshard':
                 this.shardAutofill(interaction)
                 break
-            case 'getarmor':
+            case 'getequipment':
                 this.armorAutofill(interaction)
                 break
         }
