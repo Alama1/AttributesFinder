@@ -58,6 +58,7 @@ class AuctionHandler {
             }
         })
         this.discord.attributeShardsAuctions = shards
+        console.log('Done reloading auction')
     }
     async getAuctionPagesCount() {
         const res = await fetch(this.baseURL + '/auctions').then(res => res.json()).catch(e => {

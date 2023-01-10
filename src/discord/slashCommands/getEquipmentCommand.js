@@ -1,6 +1,6 @@
 const {EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js')
 
-class getArmorCommand {
+class getEquipmentCommand {
 
     constructor(discord) {
         this.discord = discord
@@ -17,6 +17,7 @@ class getArmorCommand {
         const shard2 = interaction.options._hoistedOptions[3].value
         const shard2level = interaction.options._hoistedOptions[4].value
         let armorWithShards = this.discord.attributeArmorAuctions[armorName].filter(function (piece) {
+            if (!piece || !piece.item_stats) return
             //two shards request
             if (shard2 !== 'any') {
                 if (!piece.item_stats.hasOwnProperty(shard1) || !piece.item_stats.hasOwnProperty(shard2)) return false
@@ -124,4 +125,4 @@ class getArmorCommand {
 }
 
 
-module.exports = getArmorCommand
+module.exports = getEquipmentCommand
